@@ -20,5 +20,13 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Capacitor支持 - 在原生App中会自动注入 -->
+    <script>
+      // 检测是否在Capacitor环境中
+      if (window.Capacitor) {
+        console.log('Running in Capacitor native app');
+      }
+    </script>
   </body>
 </html>
