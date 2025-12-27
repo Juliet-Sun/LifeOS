@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>生成应用图标</title>
+</head>
+<body>
+  <h2>生成 PNG 图标</h2>
+  <p>打开浏览器控制台，图标将自动生成并下载</p>
+  
+  <canvas id="canvas192" width="192" height="192" style="display:none"></canvas>
+  <canvas id="canvas512" width="512" height="512" style="display:none"></canvas>
+  
+  <script>
+    // 加载 SVG 并转换为 PNG
+    async function generateIcons() {
+      const response = await fetch('/public/icon.svg');
+      const svgText = await response.text();
+      const blob = new Blob([svgText], { type: 'image/svg+xml' });
+      const url = URL.createObjectURL(blob);
+      
+      const img = new Image();
+      img.onload = () => {
+        // 生成 192x192
+        const canvas192 = document.getElementById('canvas192');
+        const ctx192 = canvas192.getContext('2d');
+        ctx192.drawImage(img, 0, 0, 192, 192);
+        canvas192.toBlob((blob) => {
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = 'icon-192.png';
+          a.click();
+        });
+        
+        // 生成 512x512
+        const canvas512 = document.getElementById('canvas512');
+        const ctx512 = canvas512.getContext('2d');
+        ctx512.drawImage(img, 0, 0, 512, 512);
+        canvas512.toBlob((blob) => {
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = 'icon-512.png';
+          a.click();
+        });
+        
+        URL.revokeObjectURL(url);
+        console.log('✅ 图标生成完成！请将 icon-192.png 和 icon-512.png 放到 /public 文件夹中');
+      };
+      img.src = url;
+    }
+    
+    generateIcons();
+  </script>
+</body>
+</html>

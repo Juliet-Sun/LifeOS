@@ -40,7 +40,7 @@ export function History() {
 
   const handleDelete = (id: string, content: string) => {
     const confirmText = content.length > 20 ? content.substring(0, 20) + '...' : content;
-    if (confirm(`确定要删除这条记录吗？\n\n"${confirmText}"`)) {
+    if (confirm(`确定要删除这条���录吗？\n\n"${confirmText}"`)) {
       deleteEntry(id);
     }
   };
@@ -201,7 +201,7 @@ export function History() {
                                     </div>
                                   )}
                                 </div>
-                                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div className="flex items-center gap-1">
                                   <button
                                     onClick={() => handleStartEditDimensions(entry.id, entry.dimensions)}
                                     className="p-1.5 text-neutral-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"

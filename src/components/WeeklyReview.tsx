@@ -5,6 +5,40 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 export function WeeklyReview() {
   const { getDimensionStatsByDateRange } = useEntries();
   const [weekOffset, setWeekOffset] = useState(0); // 0=本周，-1=上周，-2=上上周
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  // 最小滑动距离（像素）
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientY);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientY);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isUpSwipe = distance > minSwipeDistance;
+    const isDownSwipe = distance < -minSwipeDistance;
+    
+    if (isUpSwipe) {
+      // 向上滑动 = 查看更近的周（下一周）
+      if (weekOffset < 0) {
+        setWeekOffset(weekOffset + 1);
+      }
+    }
+    
+    if (isDownSwipe) {
+      // 向下滑动 = 查看更早的周（上一周）
+      setWeekOffset(weekOffset - 1);
+    }
+  };
 
   // 计算指定周的日期范围
   const getWeekRange = (offset: number) => {
@@ -47,11 +81,11 @@ export function WeeklyReview() {
   // 获取周标题
   const getWeekTitle = (offset: number) => {
     if (offset === 0) {
-      return isWeekComplete(0) ? '上周的生命之树' : '本周生长中';
+      return isWeekComplete(0) ? '本周的生命之树' : '本周生长中';
     } else if (offset === -1) {
-      return '上上周的生命之树';
+      return '上周的生命之树';
     } else if (offset === -2) {
-      return '三周前的生命之树';
+      return '上上周的生命之树';
     } else {
       return `${Math.abs(offset)}周前的生命之树`;
     }
@@ -219,7 +253,7 @@ export function WeeklyReview() {
   };
 
   return (
-    <article className="h-full flex flex-col bg-blue-50/30">
+    <article className="h-full overflow-y-auto flex flex-col bg-blue-50/30">
       <header className="px-6 pt-16 pb-6">
         <h1 className="text-3xl text-neutral-900">{getWeekTitle(weekOffset)}</h1>
         <div className="flex items-center justify-between mt-2">
@@ -268,6 +302,9 @@ export function WeeklyReview() {
             viewBox="30 30 300 300"
             className="w-full h-auto"
             style={{ maxHeight: '450px' }}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
           >
             {/* 中心圆 */}
             <circle
