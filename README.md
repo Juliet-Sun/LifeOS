@@ -1,7 +1,7 @@
 
-  # iOS App Design
+  # Life OS
 
-  This is a code bundle for iOS App Design. The original project is available at https://www.figma.com/design/KtUkYBjEXjoEK5Bgd458FW/iOS-App-Design.
+  This is a code bundle for Life OS. The original project is available at https://www.figma.com/design/KtUkYBjEXjoEK5Bgd458FW/Life-OS.
 
   ## Running the code
 
